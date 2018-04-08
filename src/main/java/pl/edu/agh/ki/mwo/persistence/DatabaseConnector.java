@@ -7,6 +7,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 import pl.edu.agh.ki.mwo.model.School;
+import pl.edu.agh.ki.mwo.model.SchoolClass;
 
 public class DatabaseConnector {
 	
@@ -54,6 +55,32 @@ public class DatabaseConnector {
 		for (School s : results) {
 			session.delete(s);
 		}
+		transaction.commit();
+	}
+	
+	public Iterable<SchoolClass> getSchoolClasses() {
+		
+		String hql = "FROM SchoolClass";
+		Query query = session.createQuery(hql);
+		List schoolClasses = query.list();
+		
+		return schoolClasses;
+	}
+	
+	public void deleteSchoolClass(String schoolClassId) {
+		String hql = "FROM SchoolClass S WHERE S.id=" + schoolClassId;
+		Query query = session.createQuery(hql);
+		List<SchoolClass> results = query.list();
+		Transaction transaction = session.beginTransaction();
+		for (SchoolClass s : results) {
+			session.delete(s);
+		}
+		transaction.commit();
+	}
+	
+	public void addSchoolClass(SchoolClass schoolClass) {
+		Transaction transaction = session.beginTransaction();
+		session.save(schoolClass);
 		transaction.commit();
 	}
 

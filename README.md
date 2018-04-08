@@ -1,3 +1,2 @@
-## school-spring
- -  spring MVC model
+## Spring MVC model
 Metody Wytwarzania Oprogramowania 2017

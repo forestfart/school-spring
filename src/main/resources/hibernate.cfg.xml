@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN" 
+"http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+	<session-factory>
+		<property name="show_sql">false</property>
+		<property name="format_sql">true</property>
+		<property name="dialect">pl.edu.agh.ki.mwo.persistence.SQLiteDialect</property>
+		<property name="connection.driver_class">org.sqlite.JDBC</property>
+		<property name="connection.url">jdbc:sqlite:school.db</property>
+		<property name="connection.username"></property>
+		<property name="connection.password"></property>
+	
+		<mapping class="pl.edu.agh.ki.mwo.model.School"/>
+		<mapping class="pl.edu.agh.ki.mwo.model.SchoolClass"/>
+		<mapping class="pl.edu.agh.ki.mwo.model.Student"/>
+	</session-factory>
+</hibernate-configuration>

@@ -78,7 +78,7 @@ public class DatabaseConnector {
 		transaction.commit();
 	}
 	
-	public void addSchoolClass(SchoolClass schoolClass) {
+	public void addSchoolClass(SchoolClass schoolClass) { // tutaj zaimplementowac zapis szkoły.. o ile istnuueje tak żeby  była do wyboru z listy rozwijanej
 		Transaction transaction = session.beginTransaction();
 		session.save(schoolClass);
 		transaction.commit();

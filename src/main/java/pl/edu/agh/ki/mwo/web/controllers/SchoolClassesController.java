@@ -26,8 +26,9 @@ public class SchoolClassesController {
     
     @RequestMapping(value="/CreateSchoolClass", method=RequestMethod.POST)
     public String createSchoolClass(@RequestParam(value="schoolClassStartYear", required=false) String startYear,
-    		@RequestParam(value="schoolClassCurrentYear", required=true) String currentYear,
-    		@RequestParam(value="schoolClassProfile", required=true) String profile,
+    		@RequestParam(value = "schoolClassCurrentYear", required = true) String currentYear,
+    		@RequestParam(value = "schoolClassProfile", required = true) String profile,
+    		@RequestParam(value = "schoolClassSchool", required = true) int schoolId,
     		Model model, HttpSession session) {    	
     	if (session.getAttribute("userLogin") == null)
     		return "redirect:/Login";
@@ -37,7 +38,7 @@ public class SchoolClassesController {
     	schoolClass.setCurrentYear(Integer.valueOf(currentYear));
     	schoolClass.setProfile(profile);
     	
-    	DatabaseConnector.getInstance().addSchoolClass(schoolClass);    	
+    	DatabaseConnector.getInstance().addSchoolClass(schoolClass, schoolId);
        	model.addAttribute("schoolClasses", DatabaseConnector.getInstance().getSchoolClasses());
     	model.addAttribute("message", "Nowa klasa została dodana");
          	
@@ -61,9 +62,9 @@ public class SchoolClassesController {
     public String displayAddSchoolClassForm(Model model, HttpSession session) {    	
     	if (session.getAttribute("userLogin") == null)
     		return "redirect:/Login";
-    	
+
+		model.addAttribute("schoolList", DatabaseConnector.getInstance().getSchools());
+
         return "schoolClassForm";    
     }
-
-
 }

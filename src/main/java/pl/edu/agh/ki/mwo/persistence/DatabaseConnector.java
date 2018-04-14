@@ -1,17 +1,23 @@
 package pl.edu.agh.ki.mwo.persistence;
 
+import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.edu.agh.ki.mwo.model.School;
 import pl.edu.agh.ki.mwo.model.SchoolClass;
+import pl.edu.agh.ki.mwo.model.Student;
 
 public class DatabaseConnector {
 	
 	protected static DatabaseConnector instance = null;
+	final Logger logger = LoggerFactory.getLogger(DatabaseConnector.class);
 	
 	public static DatabaseConnector getInstance() {
 		if (instance == null) {
@@ -68,20 +74,66 @@ public class DatabaseConnector {
 	}
 	
 	public void deleteSchoolClass(String schoolClassId) {
-		String hql = "FROM SchoolClass S WHERE S.id=" + schoolClassId;
+		String hql = "SELECT s FROM School s INNER JOIN s.classes classes WHERE classes.id = " + schoolClassId;
 		Query query = session.createQuery(hql);
-		List<SchoolClass> results = query.list();
-		Transaction transaction = session.beginTransaction();
-		for (SchoolClass s : results) {
-			session.delete(s);
+		School school = (School)query.uniqueResult();
+		SchoolClass schoolClass = school.getClasses().stream().filter(n->n.getId()==Long.parseLong(schoolClassId)).findFirst().get();
+		if (schoolClass != null) {
+			school.getClasses().remove(schoolClass);
+			Transaction transaction = session.beginTransaction();
+			session.save(school);
+			session.delete(schoolClass);
+			transaction.commit();
+			logger.info(String.format("SchoolClass %d %s removed from the database", schoolClass.getId(), schoolClass.getProfile()));
+		} else {
+			logger.info("failed attempt to remove schoolClass");
 		}
-		transaction.commit();
 	}
 	
-	public void addSchoolClass(SchoolClass schoolClass) { // tutaj zaimplementowac zapis szkoły.. o ile istnuueje tak żeby  była do wyboru z listy rozwijanej
+	public void addSchoolClass(SchoolClass schoolClass, int schoolId) {
+		String hql = "FROM School S WHERE S.id=" + schoolId;
+		Query query = session.createQuery(hql);
+		School school = (School)query.uniqueResult();
+		school.getClasses().add(schoolClass);
+		Transaction transaction = session.beginTransaction();
+		session.save(school);
+		transaction.commit();
+	}
+
+	public Iterable<Student> getStudents() {
+
+		String hql = "FROM Student";
+		Query query = session.createQuery(hql);
+		List students = query.list();
+
+		return students;
+	}
+
+
+	public void deleteStudent(String studentId) {
+		String hql = "SELECT s FROM SchoolClass s INNER JOIN s.students students WHERE students.id = " + studentId;
+		Query query = session.createQuery(hql);
+		SchoolClass schoolClass = (SchoolClass) query.uniqueResult();
+		Student student = schoolClass.getStudents().stream().filter(n->n.getId()==Long.parseLong(studentId)).findFirst().get();
+		if (student != null) {
+			schoolClass.getStudents().remove(student);
+			Transaction transaction = session.beginTransaction();
+			session.save(schoolClass);
+			session.delete(student);
+			transaction.commit();
+			logger.info(String.format("Student %d %s %s removed from the database", student.getId(), student.getName(), student.getSurname()));
+		} else {
+			logger.info("failed attempt to remove student");
+		}
+	}
+
+	public void addStudent(Student student, int schoolClassId) {
+		String hql = "FROM SchoolClass S WHERE S.id=" + schoolClassId;
+		Query query = session.createQuery(hql);
+		SchoolClass schoolClass = (SchoolClass)query.uniqueResult();
+		schoolClass.getStudents().add(student);
 		Transaction transaction = session.beginTransaction();
 		session.save(schoolClass);
 		transaction.commit();
 	}
-
 }

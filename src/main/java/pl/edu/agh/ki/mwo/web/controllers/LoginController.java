@@ -27,4 +27,10 @@ public class LoginController {
     	model.addAttribute("message", "Witamy w systemie Szkoła!");
         return "welcome";
     }
+
+    @RequestMapping(value="/Logout")
+    public String doLogout(Model model, HttpSession session) {
+        session.setAttribute("userLogin", null);
+        return "redirect:/Login";
+    }
 }

@@ -29,7 +29,7 @@ public class SchoolsController {
     	if (session.getAttribute("userLogin") == null)
     		return "redirect:/Login";
     	
-        return "schoolForm";    
+        return "schoolForm";
     }
 
     @RequestMapping(value="/CreateSchool", method=RequestMethod.POST)

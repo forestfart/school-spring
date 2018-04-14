@@ -28,6 +28,7 @@ public class SchoolClass implements java.io.Serializable {
 	public SchoolClass() {
 		students = new HashSet<Student>();
 	}
+
 	public Set<Student> getStudents() {
 		return students;
 	}

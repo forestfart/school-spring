@@ -1,8 +1,8 @@
 package pl.edu.agh.ki.mwo.persistence;
 
-import java.util.Iterator;
+import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -15,7 +15,6 @@ import pl.edu.agh.ki.mwo.model.SchoolClass;
 import pl.edu.agh.ki.mwo.model.Student;
 
 public class DatabaseConnector {
-	
 	protected static DatabaseConnector instance = null;
 	final Logger logger = LoggerFactory.getLogger(DatabaseConnector.class);
 	
@@ -25,7 +24,6 @@ public class DatabaseConnector {
 		}
 		return instance;
 	}
-	
 	Session session;
 
 	protected DatabaseConnector() {
@@ -39,11 +37,9 @@ public class DatabaseConnector {
 	}
 	
 	public Iterable<School> getSchools() {
-		
 		String hql = "FROM School";
 		Query query = session.createQuery(hql);
 		List schools = query.list();
-		
 		return schools;
 	}
 	
@@ -65,11 +61,9 @@ public class DatabaseConnector {
 	}
 	
 	public Iterable<SchoolClass> getSchoolClasses() {
-		
 		String hql = "FROM SchoolClass";
 		Query query = session.createQuery(hql);
 		List schoolClasses = query.list();
-		
 		return schoolClasses;
 	}
 	
@@ -101,14 +95,11 @@ public class DatabaseConnector {
 	}
 
 	public Iterable<Student> getStudents() {
-
 		String hql = "FROM Student";
 		Query query = session.createQuery(hql);
 		List students = query.list();
-
 		return students;
 	}
-
 
 	public void deleteStudent(String studentId) {
 		String hql = "SELECT s FROM SchoolClass s INNER JOIN s.students students WHERE students.id = " + studentId;
@@ -135,5 +126,19 @@ public class DatabaseConnector {
 		Transaction transaction = session.beginTransaction();
 		session.save(schoolClass);
 		transaction.commit();
+	}
+
+	public Map<Object, Object> getClassesWithSchools() {
+		String hql = "select distinct concat(c.profile, ' na ', s.name) from School s inner join s.classes c";
+		String hqlId = "select distinct c.id from School s inner join s.classes c";
+		Query query = session.createQuery(hql);
+		Query queryId = session.createQuery(hqlId);
+		List schoolClassList = query.list();
+		List schoolClassIdList = queryId.list();
+		Map<Object, Object> combinedSchoolClassList = new HashMap<>();
+		for (int i=0; i < schoolClassList.size(); i++) {
+			combinedSchoolClassList.put(schoolClassIdList.get(i), schoolClassList.get(i));
+		}
+		return combinedSchoolClassList;
 	}
 }

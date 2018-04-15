@@ -1,6 +1,5 @@
 package pl.edu.agh.ki.mwo.web.app;
 
-
 import javax.annotation.PreDestroy;
 
 import org.springframework.boot.SpringApplication;

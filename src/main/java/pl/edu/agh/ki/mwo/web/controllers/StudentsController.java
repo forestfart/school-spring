@@ -62,7 +62,7 @@ public class StudentsController {
     	if (session.getAttribute("userLogin") == null)
     		return "redirect:/Login";
 
-		model.addAttribute("schoolClassesList", DatabaseConnector.getInstance().getSchoolClasses());
+		model.addAttribute("list", DatabaseConnector.getInstance().getClassesWithSchools());
 
         return "studentForm";
     }

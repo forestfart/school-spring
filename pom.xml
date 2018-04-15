@@ -38,8 +38,12 @@
 		    <artifactId>sqlite-jdbc</artifactId>
 		    <version>3.6.2</version>
 		</dependency>
-        
-	</dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 	
 	<properties>
     <!-- The main class to start by executing java -jar -->

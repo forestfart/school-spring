@@ -4,9 +4,6 @@
 *.jar
 *.bin
 *.lock
-*.html
 *.idx
 *.MF
-*.css
-*.js
 **/target/

@@ -1,0 +1,34 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layout">
+<body>
+
+
+
+    <span layout:fragment="pageTitle"> - Studenci </span>
+
+    <div layout:fragment="content">
+    	<div th:include="menuFragment" ></div>
+		<br/><Br/>
+		<table border="1" cellpadding="5">
+			<tr><th>Id</th><th>Imię</th><th>Nazwisko</th><th>PESEL</th></tr>
+			<tr th:each="student: ${students}">
+				<td><span th:text="${student.id}" /></td>
+				<td><span th:text="${student.name}" /></td>
+				<td><span th:text="${student.surname}" /></td>
+				<td><span th:text="${student.pesel}" /></td>
+		        <td>
+		            <form action="DeleteStudent" method="POST">
+		            	<input type="hidden" name="studentId" th:value="${student.id}" />
+		                <button type="submit">X</button>
+		            </form>
+		        </td>
+			</tr>
+		
+		
+		</table><br/><a href='AddStudent'>dodaj studenta</a><br/><br/>
+		
+    </div>
+
+</body>
+</html>
